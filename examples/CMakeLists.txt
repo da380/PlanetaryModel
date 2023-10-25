@@ -1,0 +1,3 @@
+add_executable(ConceptsCheck ConceptsCheck.cpp)
+target_link_libraries(ConceptsCheck PlanetaryModel)
+
