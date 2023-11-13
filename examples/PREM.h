@@ -41,8 +41,8 @@ class EarthConstants {
 
 class PREM {
  public:
-  typedef int size_type;
-  typedef double value_type;
+  using size_type = int;
+  using value_type = double;
 
   size_type NumberOfLayers() { return 13; };
   value_type LowerRadius(size_type i) { return vec_radii[i]; }
