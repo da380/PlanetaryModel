@@ -20,7 +20,6 @@ concept HasNormalisationInformation = requires(T t) {
   // Member functions for returning derived normalisations.
   { t.DensityNorm() } -> std::convertible_to<typename T::value_type>;
   { t.InertiaNorm() } -> std::convertible_to<typename T::value_type>;
-  { t.TimeNorm() } -> std::convertible_to<typename T::value_type>;
   { t.VelocityNorm() } -> std::convertible_to<typename T::value_type>;
   { t.AccelerationNorm() } -> std::convertible_to<typename T::value_type>;
   { t.ForceNorm() } -> std::convertible_to<typename T::value_type>;

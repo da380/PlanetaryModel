@@ -1,6 +1,7 @@
 #include <PlanetaryModel/All>
 #include <concepts>
 #include <iostream>
+#include "PREM.h"
 
 class DummyClass {};
 
