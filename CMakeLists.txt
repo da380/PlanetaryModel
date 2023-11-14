@@ -23,9 +23,18 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(Eigen3)
 
+include(FetchContent)
+FetchContent_Declare(
+  Interpolation
+  GIT_REPOSITORY https://github.com/da380/Interpolation
+  GIT_TAG main
+)
+FetchContent_MakeAvailable(Interpolation)
+
 # Set up the library
 add_library (PlanetaryModel INTERFACE)
 target_link_libraries(PlanetaryModel INTERFACE Eigen3::Eigen)
+target_link_libraries(PlanetaryModel INTERFACE Interpolation)
 target_include_directories (PlanetaryModel INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>

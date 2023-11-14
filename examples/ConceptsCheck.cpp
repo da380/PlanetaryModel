@@ -9,4 +9,11 @@ template <typename T>
 requires PlanetaryModel::SphericalGeometryModel<T>
 void Dummy(T t) { t.UpperRadius(2); }
 
-int main() {}
+int main() {
+    auto myprem = PREM();
+    for (int i = 0; i < 13; ++i){
+std::cout << myprem.Density(i)(0) << " " << myprem.VP(i)(0) << std::endl;
+    }
+    
+
+}
