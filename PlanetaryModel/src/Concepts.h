@@ -131,7 +131,7 @@ concept SphericalElasticModel =
       { model.VP(i)(r) } -> std::convertible_to<typename Model::value_type>;
 
       { model.VS(i) } -> std::regular_invocable<typename Model::value_type>;
-      { model.VS(i)(r) } -> std::convertible_to<typename Model::value_type>;
+      {   model.VS(i)(r) } -> std::convertible_to<typename Model::value_type>;
     };
 
 }  // namespace PlanetaryModel

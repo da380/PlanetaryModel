@@ -54,7 +54,7 @@ class PREM {
   value_type UpperRadius(size_type i) { return vec_radii[i + 1]; }
   value_type OuterRadius() { return vec_radii[13]; }
 
-  Interpolation::Polynomial1D<double> Density(size_type i) {
+  Interpolation::Polynomial1D<double> Density(size_type i  ) {
      return vec_density[i];};
     Interpolation::Polynomial1D<double> VP(size_type i) {
     return vec_p_velocity[i];};
