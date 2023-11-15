@@ -27,7 +27,7 @@ include(FetchContent)
 FetchContent_Declare(
   Interpolation
   GIT_REPOSITORY https://github.com/da380/Interpolation
-  GIT_TAG main
+  GIT_TAG develop
 )
 FetchContent_MakeAvailable(Interpolation)
 
