@@ -10,81 +10,146 @@
 #include <ranges>
 #include <vector>
 
+template<typename FLOAT>
 class EarthConstants {
   public:
-    double LengthNorm() { return length_norm; };
-    double MassNorm() { return mass_norm; };
-    double TimeNorm() { return time_norm; }
+    using value_type = FLOAT;
+    FLOAT LengthNorm() { return length_norm; };
+    FLOAT MassNorm() { return mass_norm; };
+    FLOAT TimeNorm() { return time_norm; }
 
-    double DensityNorm() { return density_norm; };
-    double InertiaNorm() { return inertia_norm; };
-    double VelocityNorm() { return velocity_norm; };
-    double AccelerationNorm() { return acceleration_norm; };
-    double ForceNorm() { return force_norm; };
-    double StressNorm() { return stress_norm; };
-    double GravitationalConstant() { return gravitational_constant; };
+    FLOAT DensityNorm() { return density_norm; };
+    FLOAT InertiaNorm() { return inertia_norm; };
+    FLOAT VelocityNorm() { return velocity_norm; };
+    FLOAT AccelerationNorm() { return acceleration_norm; };
+    FLOAT ForceNorm() { return force_norm; };
+    FLOAT StressNorm() { return stress_norm; };
+    FLOAT GravitationalConstant() { return gravitational_constant; };
 
   private:
-    const double length_norm = 6.371 * std::pow(10.0, 6.0);
-    const double mass_norm = 5.972 * std::pow(10.0, 24.0);
-    const double time_norm = 3600.0;
+    const FLOAT length_norm = 6.371 * std::pow(10.0, 6.0);
+    const FLOAT mass_norm = 5.972 * std::pow(10.0, 24.0);
+    const FLOAT time_norm = 3600.0;
 
-    const double density_norm = mass_norm / std::pow(length_norm, 3.0);
-    const double inertia_norm = mass_norm * std::pow(length_norm, 2.0);
-    const double velocity_norm = length_norm / time_norm;
-    const double acceleration_norm = length_norm / std::pow(time_norm, 2.0);
-    const double force_norm =
+    const FLOAT density_norm = mass_norm / std::pow(length_norm, 3.0);
+    const FLOAT inertia_norm = mass_norm * std::pow(length_norm, 2.0);
+    const FLOAT velocity_norm = length_norm / time_norm;
+    const FLOAT acceleration_norm = length_norm / std::pow(time_norm, 2.0);
+    const FLOAT force_norm =
         mass_norm * length_norm / std::pow(time_norm, 2.0);
-    const double stress_norm =
+    const FLOAT stress_norm =
         mass_norm / (std::pow(time_norm, 2.0) * length_norm);
-    const double gravitational_constant =
+    const FLOAT gravitational_constant =
         std::pow(length_norm, 3.0) / (mass_norm * std::pow(time_norm, 2.0));
 };
 
-class PREM {
+template<typename FLOAT=double, typename INTEGRAL=int>
+class PREM : public EarthConstants<FLOAT>{
   public:
-    using size_type = int;
-    using value_type = double;
+    using size_type = INTEGRAL;
 
     // Constructor
     PREM(){};
+    
 
-    // functions
-    size_type NumberOfLayers() { return 13; };
-    value_type LowerRadius(size_type i) { return vec_radii[i]; }
-    value_type UpperRadius(size_type i) { return vec_radii[i + 1]; }
-    value_type OuterRadius() { return vec_radii[13]; }
+    // Geometry of PREM
+    INTEGRAL NumberOfLayers() { return 13; };
+    FLOAT LowerRadius(INTEGRAL i) { return vec_radii[i]; }
+    FLOAT UpperRadius(INTEGRAL i) { return vec_radii[i + 1]; }
+    FLOAT OuterRadius() { return vec_radii[13]; }
 
-    Interpolation::Polynomial1D<double> Density(size_type i) {
+// Density
+    Interpolation::Polynomial1D<FLOAT> Density(INTEGRAL i) {
         return vec_density[i];
     };
-    Interpolation::Polynomial1D<double> VP(size_type i) {
+
+// Isotropy/fluid/solid etc
+    bool IsIsotropic(){
+        return false;
+    };
+
+    //Solid or fluid
+    bool IsSolid(INTEGRAL i) {
+        if (i == 1 || i == 12){
+            return false;
+        } else {
+            return true;
+        }
+    }
+    bool IsFluid(INTEGRAL i){
+        return !IsSolid(i);
+    }
+
+//Return TI elastic modulii
+
+
+// Velocities
+
+    Interpolation::Polynomial1D<FLOAT> VP(INTEGRAL i) {
         return vec_p_velocity[i];
     };
-    Interpolation::Polynomial1D<double> VPV(size_type i) {
+    Interpolation::Polynomial1D<FLOAT> VPV(INTEGRAL i) {
         return vec_pv_velocity[i];
     };
-    Interpolation::Polynomial1D<double> VPH(size_type i) {
+    Interpolation::Polynomial1D<FLOAT> VPH(INTEGRAL i) {
         return vec_ph_velocity[i];
     };
-    Interpolation::Polynomial1D<double> VS(size_type i) {
-        return vec_p_velocity[i];
+    Interpolation::Polynomial1D<FLOAT> VS(INTEGRAL i) {
+        return vec_s_velocity[i];
     };
-    Interpolation::Polynomial1D<double> VSV(size_type i) {
-        return vec_pv_velocity[i];
+    Interpolation::Polynomial1D<FLOAT> VSV(INTEGRAL i) {
+        return vec_sv_velocity[i];
     };
-    Interpolation::Polynomial1D<double> VSH(size_type i) {
-        return vec_ph_velocity[i];
+    Interpolation::Polynomial1D<FLOAT> VSH(INTEGRAL i) {
+        return vec_sh_velocity[i];
     };
+
+    // Returning eta, A, C, N, L, kappa, mu
+    auto Eta(INTEGRAL i){
+        return vec_eta[i];
+    }
+    auto A(INTEGRAL i){
+        auto aret = [i, this](FLOAT x) {return Density(i)(x) * VPH(i)(x) * VPH(i)(x);
+        };
+        return aret;
+    };
+    auto C(INTEGRAL i){
+        auto aret = [i, this](FLOAT x) {return Density(i)(x) * VPV(i)(x) * VPV(i)(x);
+        };
+        return aret;
+    };
+    auto N(INTEGRAL i){
+        auto aret = [i, this](FLOAT x) {return Density(i)(x) * VSH(i)(x) * VSH(i)(x);
+        };
+        return aret;
+    };
+    auto L(INTEGRAL i){
+        auto aret = [i, this](FLOAT x) {return Density(i)(x) * VSV(i)(x) * VSV(i)(x);
+        };
+        return aret;
+    };
+    auto F(INTEGRAL i){
+        auto aret = [i,this](FLOAT x){return Eta(i)(x) * (A(i)(x) - 2 * L(i)(x));};
+        return aret;
+    };
+    auto Kappa(INTEGRAL i){
+        auto aret = [i,this](FLOAT x){return (C(i)(x) + 4.0 * (A(i)(x) - N(i)(x) + F(i)(x)))/9.0;};
+        return aret;
+    };
+    auto Mu(INTEGRAL i){
+        auto aret = [i,this](FLOAT x){return (C(i)(x) + A(i)(x) + 6.0 * L(i)(x) + 5.0*N(i)(x) - 2.0 * F(i)(x))/15.0;};
+        return aret;
+    };
+    
 
     // data
   private:
-    std::vector<value_type> vec_radii{
+    std::vector<FLOAT> vec_radii{
         0.0,       1221500.0, 3480000.0, 3630000.0, 5600000.0,
         5701000.0, 5771000.0, 5971000.0, 6151000.0, 6291000.0,
         6346600.0, 6356000.0, 6368000.0, 6371000.0};
 
-    std::vector<Interpolation::Polynomial1D<double>> vec_density{
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_density{
         {13.0855, 0, -8.8381},
         {12.5815, -1.2638, -3.6426, -5.5281},
         {7.9565, -6.4761, 5.5283, -3.0807},
@@ -99,7 +164,7 @@ class PREM {
         {2.600},
         {1.020}};
 
-    std::vector<Interpolation::Polynomial1D<double>> vec_p_velocity{
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_p_velocity{
         {11.2622, 0, -6.3640},
         {11.0487, -4.0362, 4.8023, -13.5732},
         {15.3891, -5.3181, 5.5242, -2.5514},
@@ -113,7 +178,7 @@ class PREM {
         {6.800},
         {5.800},
         {1.450}};
-    std::vector<Interpolation::Polynomial1D<double>> vec_pv_velocity{
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_pv_velocity{
         {11.2622, 0, -6.3640},
         {11.0487, -4.0362, 4.8023, -13.5732},
         {15.3891, -5.3181, 5.5242, -2.5514},
@@ -127,7 +192,7 @@ class PREM {
         {6.800},
         {5.800},
         {1.450}};
-    std::vector<Interpolation::Polynomial1D<double>> vec_ph_velocity{
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_ph_velocity{
         {11.2622, 0, -6.3640},
         {11.0487, -4.0362, 4.8023, -13.5732},
         {15.3891, -5.3181, 5.5242, -2.5514},
@@ -142,7 +207,7 @@ class PREM {
         {5.800},
         {1.450}};
 
-    std::vector<Interpolation::Polynomial1D<double>> vec_s_velocity{
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_s_velocity{
         {3.6678, 0, -4.4475},
         {0.0},
         {6.9254, 1.4672, -2.0834, 0.9783},
@@ -156,7 +221,7 @@ class PREM {
         {3.900},
         {3.200},
         {0}};
-    std::vector<Interpolation::Polynomial1D<double>> vec_sv_velocity{
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_sv_velocity{
         {3.6678, 0, -4.4475},
         {0.0},
         {6.9254, 1.4672, -2.0834, 0.9783},
@@ -170,7 +235,7 @@ class PREM {
         {3.900},
         {3.200},
         {0}};
-    std::vector<Interpolation::Polynomial1D<double>> vec_sh_velocity{
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_sh_velocity{
         {3.6678, 0, -4.4475},
         {0.0},
         {6.9254, 1.4672, -2.0834, 0.9783},
@@ -184,7 +249,7 @@ class PREM {
         {3.900},
         {3.200},
         {0}};
-    std::vector<Interpolation::Polynomial1D<double>> vec_Qmu{
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_Qmu{
         {84.6}, {std::pow(10.0, 10.0)},
         {312},  {312},
         {312},  {143},
@@ -192,9 +257,13 @@ class PREM {
         {80},   {600},
         {600},  {std::pow(10.0, 10.0)}};
 
-    std::vector<Interpolation::Polynomial1D<double>> vec_QKappa{
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_QKappa{
         {1327.7}, {57823}, {57823}, {57823}, {57823}, {57823},
         {57823},  {57823}, {57823}, {57823}, {57823}, {57823}};
+
+        std::vector<Interpolation::Polynomial1D<FLOAT>> vec_eta{
+            {1}, {1}, {1}, {1}, {1}, {1}, {1}, {1}, {1}, {1}, {3.3687, -2.4778} , {3.3687, -2.4778}, {1}, {1}, {1}
+        };
 };
 
 #endif

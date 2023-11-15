@@ -11,9 +11,13 @@ void Dummy(T t) { t.UpperRadius(2); }
 
 int main() {
     auto myprem = PREM();
-    for (int i = 0; i < 13; ++i){
-std::cout << myprem.Density(i)(0) << " " << myprem.VP(i)(0) << std::endl;
-    }
-    
+// //     for (int i = 0; i < 13; ++i){
+// // std::cout << myprem.Density(i)(0) << " " << myprem.VPH(i)(0) << " " << myprem.A(i)(0) << std::endl;
+// //     }
+//     std::cout << myprem.DensityNorm() << " "  << std::endl;
+    static_assert(PlanetaryModel::HasNormalisationInformation<EarthConstants<double> >);
+    static_assert(PlanetaryModel::SphericalGeometryModel<PREM<double, int> >);
+    static_assert(PlanetaryModel::SphericalDensityModel<PREM<double, int> >);
+    static_assert(PlanetaryModel::SphericalElasticModel<PREM<double, int> >);
 
 }
