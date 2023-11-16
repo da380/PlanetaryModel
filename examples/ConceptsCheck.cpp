@@ -26,12 +26,6 @@ int main() {
   static_assert(PlanetaryModel::SphericalElasticModel<PREM<double, int> >);
 
   // polynomials:
-  Interpolation::Polynomial1D<double> vecpoly{1.0, 2.0};
-  Interpolation::Polynomial1D<double> vecpoly2 = vecpoly * 2.0;
-  Interpolation::Polynomial1D<double> vecpoly3 = vecpoly + 2.0;
-  Interpolation::Polynomial1D<double> vecpoly4 = vecpoly + vecpoly2;
-  std::cout << vecpoly(0) << " " << vecpoly2(0) << std::endl;
-  std::cout << vecpoly(0) << " " << vecpoly3(0) << std::endl;
-  std::cout << vecpoly(0) << "," << vecpoly(1) << " " << vecpoly3(0) << "," << vecpoly3(1) << std::endl;
-  //   vecpoly2 = vecpoly * 2.0;
+  
+
 }
