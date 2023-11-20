@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.5)
 
+set(CMAKE_C_COMPILER "gcc")
+set(CMAKE_CXX_COMPILER "g++")
 project(PlanetaryModel)
 
 
@@ -31,10 +33,21 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(Interpolation)
 
+
+
+include(FetchContent)
+FetchContent_Declare(
+  GaussQuad
+  GIT_REPOSITORY https://github.com/da380/GaussQuad
+  GIT_TAG develop
+)
+FetchContent_MakeAvailable(GaussQuad)
+
 # Set up the library
 add_library (PlanetaryModel INTERFACE)
 target_link_libraries(PlanetaryModel INTERFACE Eigen3::Eigen)
 target_link_libraries(PlanetaryModel INTERFACE Interpolation)
+target_link_libraries(PlanetaryModel INTERFACE GaussQuad)
 target_include_directories (PlanetaryModel INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>
