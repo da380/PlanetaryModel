@@ -48,7 +48,12 @@ class PREM : public EarthConstants<FLOAT> {
     using size_type = INTEGRAL;
 
     // Constructor
-    PREM(){};
+    PREM() {
+        for (int idx = 0; idx < 13; ++idx) {
+            vec_A.push_back(vec_density[idx] * vec_ph_velocity[idx] *
+                            vec_ph_velocity[idx]);
+        };
+    };
 
     // Geometry of PREM
     INTEGRAL NumberOfLayers() { return 13; };
@@ -103,13 +108,14 @@ class PREM : public EarthConstants<FLOAT> {
         auto aret = [i, this](FLOAT x) {
             return Density(i)(x) * VPH(i)(x) * VPH(i)(x);
         };
+        // auto aret = Density(i) * VPH(i) * VPH(i);
         return aret;
     };
     auto C(INTEGRAL i) {
-        auto aret = [i, this](FLOAT x) {
-            return Density(i)(x) * VPV(i)(x) * VPV(i)(x);
-        };
-        return aret;
+        // auto aret = [i, this](FLOAT x) {
+        //     return Density(i)(x) * VPV(i)(x) * VPV(i)(x);
+        // };
+        return vec_A[i];
     };
     auto N(INTEGRAL i) {
         auto aret = [i, this](FLOAT x) {
@@ -278,6 +284,8 @@ class PREM : public EarthConstants<FLOAT> {
                                                             {1},
                                                             {1},
                                                             {1}};
+
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_A;
 };
 
 #endif

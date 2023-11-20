@@ -48,6 +48,7 @@ main() {
 
     // finding mass and moment of inertia of a spherical model
     auto myprem = PREM();
+    std::cout << "Oh Hello: " << myprem.A(0)(0.0) << std::endl;
     double PMass = 0;
     double PINIT = 0;
     int numlayers = myprem.NumberOfLayers();
