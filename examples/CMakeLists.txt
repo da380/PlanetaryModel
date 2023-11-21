@@ -3,3 +3,6 @@ target_link_libraries(ConceptsCheck PlanetaryModel)
 
 add_executable(Integrator Integrator.cpp)
 target_link_libraries(Integrator PlanetaryModel)
+
+add_executable(testpoundfoot testpoundfoot.cpp)
+target_link_libraries(testpoundfoot PlanetaryModel)

@@ -1,16 +1,34 @@
 #include <GaussQuad/All>
 #include <PlanetaryModel/All>
+// #include <boost/units/systems/si/current.hpp>
+// #include <boost/units/systems/si/electric_potential.hpp>
+// #include <boost/units/systems/si/energy.hpp>
+// #include <boost/units/systems/si/force.hpp>
+// #include <boost/units/systems/si/io.hpp>
+// #include <boost/units/systems/si/length.hpp>
+// #include <boost/units/systems/si/resistance.hpp>
+
+#include <complex>
 #include <concepts>
 #include <iostream>
 
 #include "PREM.h"
+#include <boost/mpl/list.hpp>
 
+#include <boost/typeof/std/complex.hpp>
+
+#include <boost/units/io.hpp>
+#include <boost/units/pow.hpp>
+#include <boost/units/quantity.hpp>
+
+#include "test_system.hpp"
 int
 main() {
     using Float = double;
 
     using namespace GaussQuad;
-
+    using namespace boost::units;
+    using namespace boost::units::test;
     // Set the output precision
     using std::cout;
     using std::endl;
@@ -92,4 +110,31 @@ main() {
               << std::endl;
     std::cout << "The moment of inertia of the Earth in PREM is: " << PINIT
               << std::endl;
+
+    {
+        //[quantity_snippet_1
+        quantity<length> L = 2.0 * meters;   // quantity of length
+        quantity<energy> E =
+            kilograms * pow<2>(L / seconds);   // quantity of energy
+        //]
+
+        std::cout
+            << "L                                 = " << L << std::endl
+            << "L+L                               = " << L + L << std::endl
+            << "L-L                               = " << L - L << std::endl
+            << "L*L                               = " << L * L << std::endl
+            << "L/L                               = " << L / L << std::endl
+            << "L*meter                           = " << L * meter << std::endl
+            << "kilograms*(L/seconds)*(L/seconds) = "
+            << kilograms * (L / seconds) * (L / seconds) << std::endl
+            << "kilograms*(L/seconds)^2           = "
+            << kilograms * pow<2>(L / seconds) << std::endl
+            << "L^3                               = " << pow<3>(L) << std::endl
+            << "L^(3/2)                           = "
+            << pow<static_rational<3, 2>>(L) << std::endl
+            << "2vL                               = " << root<2>(L) << std::endl
+            << "(3/2)vL                           = "
+            << root<static_rational<3, 2>>(L) << std::endl
+            << std::endl;
+    }
 }
