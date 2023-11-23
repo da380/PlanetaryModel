@@ -12,7 +12,7 @@
 #include <concepts>
 #include <iostream>
 
-#include "PREM.h"
+#include "EARTHMODELS.h"
 #include <boost/mpl/list.hpp>
 
 #include <boost/typeof/std/complex.hpp>
@@ -24,6 +24,7 @@
 #include "test_system.hpp"
 int
 main() {
+    using namespace EarthModels;
     using Float = double;
 
     using namespace GaussQuad;

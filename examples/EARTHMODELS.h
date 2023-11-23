@@ -1,5 +1,5 @@
-#ifndef PREM_MODEL_GUARD_H
-#define PREM_MODEL_GUARD_H
+#ifndef EARTHMODELS_GUARD_H
+#define EARTHMODELS_GUARD_H
 
 #include <PlanetaryModel/All>
 #include <cmath>
@@ -11,6 +11,7 @@
 
 #include "Interpolation/All"
 
+namespace EarthModels {
 template <typename FLOAT> class EarthConstants {
   public:
     using value_type = FLOAT;
@@ -287,5 +288,28 @@ class PREM : public EarthConstants<FLOAT> {
 
     std::vector<Interpolation::Polynomial1D<FLOAT>> vec_A;
 };
+
+template <typename FLOAT = double, typename INTEGRAL = int>
+class PERTPREM : public PREM<FLOAT, int> {
+
+  public:
+    using size_type = INTEGRAL;
+
+    // Constructor
+    PERTPREM(){};
+
+    // Density
+    Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
+        return vec_pert_density[i];
+    };
+
+  private:
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_pert_density{
+        {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0},
+        {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0},
+        {0, 0, 0}, {0, 0, 0}, {0.0}};
+};
+
+};   // namespace EarthModels
 
 #endif

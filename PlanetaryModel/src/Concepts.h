@@ -141,6 +141,22 @@ concept SphericalElasticModel =
         { model.VS(i)(r) } -> std::convertible_to<typename Model::value_type>;
     };
 
+// Concept for a spherical density model.
+template <typename Model>
+concept AsphericalDensityModel =
+    requires(Model model, Model::size_type i, Model::value_type r) {
+        // Needs all properties of a spherical geometry model.
+        requires SphericalDensityModel<Model>;
+
+        // Member function to return density in the ith layer.
+        {
+            model.DensityPerturbation(i)
+        } -> std::regular_invocable<typename Model::value_type>;
+        {
+            model.DensityPerturbation(i)(r)
+        } -> std::convertible_to<typename Model::value_type>;
+    };
+
 }   // namespace PlanetaryModel
 
 #endif   // PLANETARY_MODEL_CONCEPTS_GUARD_H
