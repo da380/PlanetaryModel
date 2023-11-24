@@ -6,3 +6,6 @@ target_link_libraries(Integrator PlanetaryModel)
 
 add_executable(testpoundfoot testpoundfoot.cpp)
 target_link_libraries(testpoundfoot PlanetaryModel)
+
+add_executable(Spectral_Element Spectral_Element.cpp)
+target_link_libraries(Spectral_Element PlanetaryModel)
