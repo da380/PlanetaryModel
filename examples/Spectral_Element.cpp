@@ -74,16 +74,6 @@ main() {
     }
     auto plag = Lagrange(x.begin(), x.end(), y.begin());
 
-    // return
-    int n = 100;
-    dx = (x2 - x1) / static_cast<double>(n - 1);
-    auto file = std::ofstream("Lagrange.out");
-    for (int i = 0; i < n; i++) {
-        double x = x1 + i * dx;
-        int j = 1;
-        file << x << " " << plag(x) << " " << plag.Derivative(x) << std::endl;
-    }
-
     // define domain:
     double rmax = 10.0;
     double rmin = 0.0;
@@ -92,7 +82,8 @@ main() {
     int matlen = nelem * npoly + 1;
     double dr = (rmax - rmin) / nelem;
     Eigen::MatrixXd matspec = Eigen::MatrixXd::Zero(matlen, matlen);
-    Eigen::MatrixXd matsub = Eigen::MatrixXd::Zero(npoly + 1, npoly + 1);
+    Eigen::MatrixXd matsub1 = Eigen::MatrixXd::Zero(npoly + 1, npoly + 1);
+    Eigen::MatrixXd matsub2 = Eigen::MatrixXd::Zero(npoly + 1, npoly + 1);
 
     // find each sub-block for mass matrix
     // generate Gauss grid
@@ -103,14 +94,38 @@ main() {
     auto func = [pleg](int i, int j, double xval) {
         return pleg(i, xval) * pleg(j, xval);
     };
+    auto func1 = [pleg](int i, int j, double xval) {
+        return pleg(i, xval) * pleg.Derivative(j, xval);
+    };
 
     for (int i = 0; i < npoly + 1; ++i) {
         for (int j = 0; j < npoly + 1; ++j) {
             auto funcij = [func, i, j](double xval) {
                 return func(i, j, xval);
             };
-            matsub(i, j) = q.Integrate(funcij);
+            auto funcij2 = [func1, i, j](double xval) {
+                return func1(i, j, xval);
+            };
+            matsub1(i, j) = q.Integrate(funcij);
+            matsub2(i, j) = q.Integrate(funcij2);
         }
     }
-    std::cout << matsub << std::endl;
+    std::cout << matsub1 << std::endl;
+    std::cout << matsub2 << std::endl;
+
+    std::cout << "\n Value of 0th Lagrange polynomial and derivative at -1: "
+              << std::endl;
+    std::cout << pleg(0, -1) << std::endl;
+    std::cout << pleg.Derivative(0, -1) << std::endl;
+
+    // return
+    int n = 100;
+    dx = (2.0) / static_cast<double>(n - 1);
+    auto file = std::ofstream("Lagrange.out");
+    for (int i = 0; i < n; i++) {
+        double x = -1.0 + i * dx;
+        int j = 1;
+        file << x << ";" << pleg(0, x) << ";" << pleg.Derivative(0, x)
+             << std::endl;
+    }
 }
