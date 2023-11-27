@@ -82,9 +82,11 @@ main() {
     int matlen = nelem * npoly + 1;
     double dr = (rmax - rmin) / nelem;
     Eigen::MatrixXd matspec = Eigen::MatrixXd::Zero(matlen, matlen);
+
     Eigen::MatrixXd matsub1 = Eigen::MatrixXd::Zero(npoly + 1, npoly + 1);
     Eigen::MatrixXd matsub2 = Eigen::MatrixXd::Zero(npoly + 1, npoly + 1);
-
+    Eigen::VectorXd vecforce = Eigen::VectorXd::Zero(matlen);
+    Eigen::VectorXd vecsol = Eigen::VectorXd::Zero(matlen);
     // find each sub-block for mass matrix
     // generate Gauss grid
     auto q = GaussQuad::GaussLobattoLegendreQuadrature1D<double>(npoly + 1);
@@ -95,7 +97,7 @@ main() {
         return pleg(i, xval) * pleg(j, xval);
     };
     auto func1 = [pleg](int i, int j, double xval) {
-        return pleg(i, xval) * pleg.Derivative(j, xval);
+        return pleg.Derivative(i, xval) * pleg(j, xval);
     };
 
     for (int i = 0; i < npoly + 1; ++i) {
@@ -110,22 +112,43 @@ main() {
             matsub2(i, j) = q.Integrate(funcij2);
         }
     }
-    std::cout << matsub1 << std::endl;
-    std::cout << matsub2 << std::endl;
-
-    std::cout << "\n Value of 0th Lagrange polynomial and derivative at -1: "
-              << std::endl;
-    std::cout << pleg(0, -1) << std::endl;
-    std::cout << pleg.Derivative(0, -1) << std::endl;
-
-    // return
-    int n = 100;
-    dx = (2.0) / static_cast<double>(n - 1);
-    auto file = std::ofstream("Lagrange.out");
-    for (int i = 0; i < n; i++) {
-        double x = -1.0 + i * dx;
-        int j = 1;
-        file << x << ";" << pleg(0, x) << ";" << pleg.Derivative(0, x)
-             << std::endl;
+    // force vector
+    for (int idx = 0; idx < matlen; ++idx) {
+        auto funcforce = [pleg, idx, npoly](double x) {
+            return pleg(idx % npoly, x);
+        };
+        vecforce(idx) += q.Integrate(funcforce);
     }
+    // std::cout << matsub1 << std::endl;
+    // std::cout << matsub2 << std::endl;
+
+    // std::cout << "\n Value of 0th Lagrange polynomial and derivative at -1: "
+    //           << std::endl;
+    // std::cout << pleg(0, -1) << std::endl;
+    // std::cout << pleg.Derivative(0, -1) << std::endl;
+
+    // fill out matspec
+    for (int idx = 0; idx < nelem; ++idx) {
+        matspec.block(idx * npoly, idx * npoly, npoly + 1, npoly + 1) -=
+            matsub2;
+    }
+
+    // final element
+    matspec(matlen - 1, matlen - 1) += pleg(npoly, 1.0) * pleg(npoly, 1.0);
+    Eigen::FullPivLU<Eigen::MatrixXd> solver(matspec);
+    vecsol = solver.solve(vecforce);
+    auto file = std::ofstream("SpecElem.out");
+    for (int i = 0; i < matlen; ++i) {
+        file << vecsol(i) << std::endl;
+    }
+    // return
+    // int n = 100;
+    // dx = (2.0) / static_cast<double>(n - 1);
+    // auto file = std::ofstream("Lagrange.out");
+    // for (int i = 0; i < n; i++) {
+    //     double x = -1.0 + i * dx;
+    //     int j = 1;
+    //     file << x << ";" << pleg(0, x) << ";" << pleg.Derivative(0, x)
+    //          << std::endl;
+    // }
 }
