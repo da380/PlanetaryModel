@@ -64,7 +64,7 @@ class PREM : public EarthConstants<FLOAT> {
 
     // Density
     Interpolation::Polynomial1D<FLOAT> Density(INTEGRAL i) {
-        return vec_density[i];
+        return 1000.0 * vec_density[i];
     };
 
     // Isotropy/fluid/solid etc
