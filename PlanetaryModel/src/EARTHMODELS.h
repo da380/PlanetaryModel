@@ -15,17 +15,17 @@ namespace EarthModels {
 template <typename FLOAT> class EarthConstants {
   public:
     using value_type = FLOAT;
-    FLOAT LengthNorm() { return length_norm; };
-    FLOAT MassNorm() { return mass_norm; };
-    FLOAT TimeNorm() { return time_norm; }
+    FLOAT LengthNorm() const { return length_norm; };
+    FLOAT MassNorm() const { return mass_norm; };
+    FLOAT TimeNorm() const { return time_norm; }
 
-    FLOAT DensityNorm() { return density_norm; };
-    FLOAT InertiaNorm() { return inertia_norm; };
-    FLOAT VelocityNorm() { return velocity_norm; };
-    FLOAT AccelerationNorm() { return acceleration_norm; };
-    FLOAT ForceNorm() { return force_norm; };
-    FLOAT StressNorm() { return stress_norm; };
-    FLOAT GravitationalConstant() { return gravitational_constant; };
+    FLOAT DensityNorm() const { return density_norm; };
+    FLOAT InertiaNorm() const { return inertia_norm; };
+    FLOAT VelocityNorm() const { return velocity_norm; };
+    FLOAT AccelerationNorm() const { return acceleration_norm; };
+    FLOAT ForceNorm() const { return force_norm; };
+    FLOAT StressNorm() const { return stress_norm; };
+    FLOAT GravitationalConstant() const { return gravitational_constant; };
 
   private:
     const FLOAT length_norm = 6.371 * std::pow(10.0, 6.0);
@@ -57,92 +57,92 @@ class PREM : public EarthConstants<FLOAT> {
     };
 
     // Geometry of PREM
-    INTEGRAL NumberOfLayers() { return 13; };
-    FLOAT LowerRadius(INTEGRAL i) { return vec_radii[i]; }
-    FLOAT UpperRadius(INTEGRAL i) { return vec_radii[i + 1]; }
-    FLOAT OuterRadius() { return vec_radii[13]; }
+    INTEGRAL NumberOfLayers() const { return 13; };
+    FLOAT LowerRadius(INTEGRAL i) const { return vec_radii[i]; }
+    FLOAT UpperRadius(INTEGRAL i) const { return vec_radii[i + 1]; }
+    FLOAT OuterRadius() const { return vec_radii[13]; }
 
     // Density
-    Interpolation::Polynomial1D<FLOAT> Density(INTEGRAL i) {
+    Interpolation::Polynomial1D<FLOAT> Density(INTEGRAL i) const {
         return 1000.0 * vec_density[i];
     };
 
     // Isotropy/fluid/solid etc
-    bool IsIsotropic() { return false; };
+    bool IsIsotropic() const { return false; };
 
     // Solid or fluid
-    bool IsSolid(INTEGRAL i) {
+    bool IsSolid(INTEGRAL i) const {
         if (i == 1 || i == 12) {
             return false;
         } else {
             return true;
         }
     }
-    bool IsFluid(INTEGRAL i) { return !IsSolid(i); }
+    bool IsFluid(INTEGRAL i) const { return !IsSolid(i); }
 
     // Return TI elastic modulii
 
     // Velocities
 
-    Interpolation::Polynomial1D<FLOAT> VP(INTEGRAL i) {
+    Interpolation::Polynomial1D<FLOAT> VP(INTEGRAL i) const {
         return vec_p_velocity[i];
     };
-    Interpolation::Polynomial1D<FLOAT> VPV(INTEGRAL i) {
+    Interpolation::Polynomial1D<FLOAT> VPV(INTEGRAL i) const {
         return vec_pv_velocity[i];
     };
-    Interpolation::Polynomial1D<FLOAT> VPH(INTEGRAL i) {
+    Interpolation::Polynomial1D<FLOAT> VPH(INTEGRAL i) const {
         return vec_ph_velocity[i];
     };
-    Interpolation::Polynomial1D<FLOAT> VS(INTEGRAL i) {
+    Interpolation::Polynomial1D<FLOAT> VS(INTEGRAL i) const {
         return vec_s_velocity[i];
     };
-    Interpolation::Polynomial1D<FLOAT> VSV(INTEGRAL i) {
+    Interpolation::Polynomial1D<FLOAT> VSV(INTEGRAL i) const {
         return vec_sv_velocity[i];
     };
-    Interpolation::Polynomial1D<FLOAT> VSH(INTEGRAL i) {
+    Interpolation::Polynomial1D<FLOAT> VSH(INTEGRAL i) const {
         return vec_sh_velocity[i];
     };
 
     // Returning eta, A, C, N, L, kappa, mu
-    auto Eta(INTEGRAL i) { return vec_eta[i]; }
-    auto A(INTEGRAL i) {
+    auto Eta(INTEGRAL i) const { return vec_eta[i]; }
+    auto A(INTEGRAL i) const {
         auto aret = [i, this](FLOAT x) {
             return Density(i)(x) * VPH(i)(x) * VPH(i)(x);
         };
         // auto aret = Density(i) * VPH(i) * VPH(i);
         return aret;
     };
-    auto C(INTEGRAL i) {
+    auto C(INTEGRAL i) const {
         // auto aret = [i, this](FLOAT x) {
         //     return Density(i)(x) * VPV(i)(x) * VPV(i)(x);
         // };
         return vec_A[i];
     };
-    auto N(INTEGRAL i) {
+    auto N(INTEGRAL i) const {
         auto aret = [i, this](FLOAT x) {
             return Density(i)(x) * VSH(i)(x) * VSH(i)(x);
         };
         return aret;
     };
-    auto L(INTEGRAL i) {
+    auto L(INTEGRAL i) const {
         auto aret = [i, this](FLOAT x) {
             return Density(i)(x) * VSV(i)(x) * VSV(i)(x);
         };
         return aret;
     };
-    auto F(INTEGRAL i) {
+    auto F(INTEGRAL i) const {
         auto aret = [i, this](FLOAT x) {
             return Eta(i)(x) * (A(i)(x) - 2 * L(i)(x));
         };
         return aret;
     };
-    auto Kappa(INTEGRAL i) {
+    auto Kappa(INTEGRAL i) const {
         auto aret = [i, this](FLOAT x) {
             return (C(i)(x) + 4.0 * (A(i)(x) - N(i)(x) + F(i)(x))) / 9.0;
         };
         return aret;
     };
-    auto Mu(INTEGRAL i) {
+    auto Mu(INTEGRAL i) const {
         auto aret = [i, this](FLOAT x) {
             return (C(i)(x) + A(i)(x) + 6.0 * L(i)(x) + 5.0 * N(i)(x) -
                     2.0 * F(i)(x)) /
