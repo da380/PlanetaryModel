@@ -144,7 +144,8 @@ concept SphericalElasticModel =
 // Concept for a spherical density model.
 template <typename Model>
 concept AsphericalDensityModel =
-    requires(Model model, Model::size_type i, Model::value_type r) {
+    requires(Model model, Model::size_type i, Model::value_type r,
+             Model::value_type theta, Model::value_type phi) {
         // Needs all properties of a spherical geometry model.
         requires SphericalDensityModel<Model>;
 
@@ -153,7 +154,7 @@ concept AsphericalDensityModel =
             model.DensityPerturbation(i)
         } -> std::regular_invocable<typename Model::value_type>;
         {
-            model.DensityPerturbation(i)(r)
+            model.DensityPerturbation(i)(r, theta, phi)
         } -> std::convertible_to<typename Model::value_type>;
     };
 
