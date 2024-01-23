@@ -161,12 +161,9 @@ concept AsphericalDensityModel =
 // Concept for a simple deviation model.
 template <typename Model>
 concept SingleParameterDeviationModel =
-    requires(Model model, Model::size_type i, Model::value_type depth,
-             Model::value_type theta, Model::value_type phi) {
+    requires(Model model, int i, double depth, double theta, double phi) {
         // Member function to return density in the ith layer.
-        {
-            model.GetValueAt(depth, theta, phi)
-        } -> std::convertible_to<typename Model::value_type>;
+        { model.GetValueAt(depth, theta, phi) } -> std::convertible_to<double>;
     };
 }   // namespace PlanetaryModel
 
