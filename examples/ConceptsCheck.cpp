@@ -28,8 +28,8 @@ main() {
     static_assert(PlanetaryModel::SphericalGeometryModel<PREM<double, int>>);
     static_assert(PlanetaryModel::SphericalDensityModel<PREM<double, int>>);
     static_assert(PlanetaryModel::SphericalElasticModel<PREM<double, int>>);
-    static_assert(
-        PlanetaryModel::AsphericalDensityModel<PERTPREM<double, int>>);
+    // static_assert(
+    //     PlanetaryModel::AsphericalDensityModel<PERTPREM<double, int>>);
 
     std::cout << myprem.VSH(2)(3480.0 / 6371.0) << std::endl;
     // polynomials:

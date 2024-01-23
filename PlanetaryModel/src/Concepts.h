@@ -158,6 +158,16 @@ concept AsphericalDensityModel =
         } -> std::convertible_to<typename Model::value_type>;
     };
 
+// Concept for a simple deviation model.
+template <typename Model>
+concept SINGLEPARAMETERDEVIATIONMODEL =
+    requires(Model model, Model::size_type i, Model::value_type depth,
+             Model::value_type theta, Model::value_type phi) {
+        // Member function to return density in the ith layer.
+        {
+            model.GetValueAt(depth, theta, phi)
+        } -> std::convertible_to<typename Model::value_type>;
+    };
 }   // namespace PlanetaryModel
 
 #endif   // PLANETARY_MODEL_CONCEPTS_GUARD_H
