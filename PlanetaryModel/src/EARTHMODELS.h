@@ -302,6 +302,10 @@ class PERTPREM : public PREM<FLOAT, int> {
     Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
         return vec_pert_density[i];
     };
+    // std::function<FLOAT(FLOAT, FLOAT, FLOAT)> RadialMap() const {
+    //     return RadialMap();
+    // };
+    FLOAT RadialMap(FLOAT r, FLOAT theta, FLOAT phi) const { return 0.0; };
 
   private:
     std::vector<Interpolation::Polynomial1D<FLOAT>> vec_pert_density{

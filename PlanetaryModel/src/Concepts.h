@@ -28,7 +28,7 @@ concept HasNormalisationInformation = requires(T t) {
         t.GravitationalConstant()
     } -> std::convertible_to<typename T::value_type>;
 };
-
+ 
 // Concept for a spherical geometry model.
 template <typename Model>
 concept SphericalGeometryModel =
