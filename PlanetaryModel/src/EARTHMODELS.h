@@ -314,6 +314,198 @@ class PERTPREM : public PREM<FLOAT, int> {
         {0, 0, 0}, {0, 0, 0}, {0.0}};
 };
 
+template <typename FLOAT> class HomogeneousConstants {
+  public:
+    using value_type = FLOAT;
+    FLOAT LengthNorm() const { return length_norm; };
+    FLOAT MassNorm() const { return mass_norm; };
+    FLOAT TimeNorm() const { return time_norm; }
+
+    FLOAT DensityNorm() const { return density_norm; };
+    FLOAT InertiaNorm() const { return inertia_norm; };
+    FLOAT VelocityNorm() const { return velocity_norm; };
+    FLOAT AccelerationNorm() const { return acceleration_norm; };
+    FLOAT ForceNorm() const { return force_norm; };
+    FLOAT StressNorm() const { return stress_norm; };
+    FLOAT GravitationalConstant() const { return gravitational_constant; };
+
+  private:
+    const FLOAT length_norm = 6.371 * std::pow(10.0, 6.0);
+    const FLOAT mass_norm = 5.972 * std::pow(10.0, 24.0);
+    const FLOAT time_norm = 3600.0;
+
+    const FLOAT density_norm = mass_norm / std::pow(length_norm, 3.0);
+    const FLOAT inertia_norm = mass_norm * std::pow(length_norm, 2.0);
+    const FLOAT velocity_norm = length_norm / time_norm;
+    const FLOAT acceleration_norm = length_norm / std::pow(time_norm, 2.0);
+    const FLOAT force_norm = mass_norm * length_norm / std::pow(time_norm, 2.0);
+    const FLOAT stress_norm =
+        mass_norm / (std::pow(time_norm, 2.0) * length_norm);
+    const FLOAT gravitational_constant =
+        std::pow(length_norm, 3.0) / (mass_norm * std::pow(time_norm, 2.0));
+};
+
+template <typename FLOAT = double, typename INTEGRAL = int>
+class HOMOSPHERE : public HomogeneousConstants<FLOAT> {
+  public:
+    using size_type = INTEGRAL;
+
+    // Constructor
+    HOMOSPHERE() {
+        for (int idx = 0; idx < 3; ++idx) {
+            vec_A.push_back(vec_density[idx] * vec_ph_velocity[idx] *
+                            vec_ph_velocity[idx]);
+        };
+    };
+
+    // Geometry of PREM
+    INTEGRAL NumberOfLayers() const { return 3; };
+    FLOAT LowerRadius(INTEGRAL i) const { return vec_radii[i]; }
+    FLOAT UpperRadius(INTEGRAL i) const { return vec_radii[i + 1]; }
+    FLOAT OuterRadius() const { return vec_radii[3]; }
+
+    // Density
+    Interpolation::Polynomial1D<FLOAT> Density(INTEGRAL i) const {
+        return 1000.0 * vec_density[i];
+    };
+
+    // Isotropy/fluid/solid etc
+    bool IsIsotropic() const { return false; };
+
+    // Solid or fluid
+    bool IsSolid(INTEGRAL i) const { return true; }
+    bool IsFluid(INTEGRAL i) const { return !IsSolid(i); }
+
+    // Return TI elastic modulii
+
+    // Velocities
+
+    Interpolation::Polynomial1D<FLOAT> VP(INTEGRAL i) const {
+        return vec_p_velocity[i];
+    };
+    Interpolation::Polynomial1D<FLOAT> VPV(INTEGRAL i) const {
+        return vec_pv_velocity[i];
+    };
+    Interpolation::Polynomial1D<FLOAT> VPH(INTEGRAL i) const {
+        return vec_ph_velocity[i];
+    };
+    Interpolation::Polynomial1D<FLOAT> VS(INTEGRAL i) const {
+        return vec_s_velocity[i];
+    };
+    Interpolation::Polynomial1D<FLOAT> VSV(INTEGRAL i) const {
+        return vec_sv_velocity[i];
+    };
+    Interpolation::Polynomial1D<FLOAT> VSH(INTEGRAL i) const {
+        return vec_sh_velocity[i];
+    };
+
+    // Returning eta, A, C, N, L, kappa, mu
+    auto Eta(INTEGRAL i) const { return vec_eta[i]; }
+    auto A(INTEGRAL i) const {
+        auto aret = [i, this](FLOAT x) {
+            return Density(i)(x) * VPH(i)(x) * VPH(i)(x);
+        };
+        // auto aret = Density(i) * VPH(i) * VPH(i);
+        return aret;
+    };
+    auto C(INTEGRAL i) const {
+        // auto aret = [i, this](FLOAT x) {
+        //     return Density(i)(x) * VPV(i)(x) * VPV(i)(x);
+        // };
+        return vec_A[i];
+    };
+    auto N(INTEGRAL i) const {
+        auto aret = [i, this](FLOAT x) {
+            return Density(i)(x) * VSH(i)(x) * VSH(i)(x);
+        };
+        return aret;
+    };
+    auto L(INTEGRAL i) const {
+        auto aret = [i, this](FLOAT x) {
+            return Density(i)(x) * VSV(i)(x) * VSV(i)(x);
+        };
+        return aret;
+    };
+    auto F(INTEGRAL i) const {
+        auto aret = [i, this](FLOAT x) {
+            return Eta(i)(x) * (A(i)(x) - 2 * L(i)(x));
+        };
+        return aret;
+    };
+    auto Kappa(INTEGRAL i) const {
+        auto aret = [i, this](FLOAT x) {
+            return (C(i)(x) + 4.0 * (A(i)(x) - N(i)(x) + F(i)(x))) / 9.0;
+        };
+        return aret;
+    };
+    auto Mu(INTEGRAL i) const {
+        auto aret = [i, this](FLOAT x) {
+            return (C(i)(x) + A(i)(x) + 6.0 * L(i)(x) + 5.0 * N(i)(x) -
+                    2.0 * F(i)(x)) /
+                   15.0;
+        };
+        return aret;
+    };
+
+    // data
+  private:
+    std::vector<FLOAT> vec_radii{0.0, 1221500.0, 2700000.0, 6371000.0};
+
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_density{
+        {5.51, 0, -8.8381}, {5.51, 0, -8.8381}, {5.51, 0, -8.8381}};
+
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_p_velocity{
+        {1.0, 0, 0}, {1.0, 0, 0}, {1.0, 0, 0}};
+
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_pv_velocity{
+        {1.0, 0, 0}, {1.0, 0, 0}, {1.0, 0, 0}};
+
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_ph_velocity{
+        {1.0, 0, 0}, {1.0, 0, 0}, {1.0, 0, 0}};
+
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_s_velocity{
+        {1.0, 0, 0}, {1.0, 0, 0}, {1.0, 0, 0}};
+
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_sv_velocity{
+        {1.0, 0, 0}, {1.0, 0, 0}, {1.0, 0, 0}};
+
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_sh_velocity{
+        {1.0, 0, 0}, {1.0, 0, 0}, {1.0, 0, 0}};
+
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_Qmu{
+        {100.0}, {100.0}, {100.0}};
+
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_QKappa{
+        {57823}, {57823}, {57823}};
+
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_eta{{1}, {1}, {1}};
+
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_A;
+};
+
+template <typename FLOAT = double, typename INTEGRAL = int>
+class HOMOBOUND1 : public HOMOSPHERE<FLOAT, int> {
+
+  public:
+    using size_type = INTEGRAL;
+
+    // Constructor
+    HOMOBOUND1(){};
+
+    // Density
+    Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
+        return vec_pert_density[i];
+    };
+    // std::function<FLOAT(FLOAT, FLOAT, FLOAT)> RadialMap() const {
+    //     return RadialMap();
+    // };
+    FLOAT RadialMap(FLOAT r, FLOAT theta, FLOAT phi) const { return 0.0; };
+
+  private:
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_pert_density{
+        {0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+};
+
 };   // namespace EarthModels
 
 #endif
