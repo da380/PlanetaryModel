@@ -452,7 +452,7 @@ class HOMOSPHERE : public HomogeneousConstants<FLOAT> {
     std::vector<FLOAT> vec_radii{0.0, 1221500.0, 2700000.0, 6371000.0};
 
     std::vector<Interpolation::Polynomial1D<FLOAT>> vec_density{
-        {5.51, 0, -8.8381}, {5.51, 0, -8.8381}, {5.51, 0, -8.8381}};
+        {5.51, 0, 0.0}, {5.51, 0, 0.0}, {5.51, 0, 0.0}};
 
     std::vector<Interpolation::Polynomial1D<FLOAT>> vec_p_velocity{
         {1.0, 0, 0}, {1.0, 0, 0}, {1.0, 0, 0}};
