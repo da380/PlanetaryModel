@@ -499,7 +499,7 @@ class HOMOBOUND1 : public HOMOSPHERE<FLOAT, int> {
     // std::function<FLOAT(FLOAT, FLOAT, FLOAT)> RadialMap() const {
     //     return RadialMap();
     // };
-    FLOAT RadialMap(FLOAT r, FLOAT theta, FLOAT phi) const { return 0.0; };
+    FLOAT RadialMap(FLOAT r, FLOAT theta, FLOAT phi) const { return 0.1 * r; };
 
   private:
     std::vector<Interpolation::Polynomial1D<FLOAT>> vec_pert_density{
