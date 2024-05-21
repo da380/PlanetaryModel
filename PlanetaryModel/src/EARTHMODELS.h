@@ -374,7 +374,15 @@ class HOMOSPHERE : public HomogeneousConstants<FLOAT> {
 
     // Density
     Interpolation::Polynomial1D<FLOAT> Density(INTEGRAL i) const {
-        return 1000.0 * vec_density[i];
+        if (i < 0) {
+            Interpolation::Polynomial1D<FLOAT> rettemp{0.0};
+            return rettemp;
+        } else if (i > this->NumberOfLayers() - 1) {
+            Interpolation::Polynomial1D<FLOAT> rettemp{0.0};
+            return rettemp;
+        } else {
+            return 1000.0 * vec_density[i];
+        }
     };
 
     // Isotropy/fluid/solid etc
