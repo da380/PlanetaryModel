@@ -368,9 +368,13 @@ class HOMOSPHERE : public HomogeneousConstants<FLOAT> {
 
     // Geometry of PREM
     INTEGRAL NumberOfLayers() const { return 3; };
-    FLOAT LowerRadius(INTEGRAL i) const { return vec_radii[i]; }
-    FLOAT UpperRadius(INTEGRAL i) const { return vec_radii[i + 1]; }
-    FLOAT OuterRadius() const { return vec_radii[3]; }
+    FLOAT LowerRadius(INTEGRAL i) const {
+        return vec_radii[i] / this->LengthNorm();
+    }
+    FLOAT UpperRadius(INTEGRAL i) const {
+        return vec_radii[i + 1] / this->LengthNorm();
+    }
+    FLOAT OuterRadius() const { return vec_radii[3] / this->LengthNorm(); }
 
     // Density
     Interpolation::Polynomial1D<FLOAT> Density(INTEGRAL i) const {
@@ -381,7 +385,7 @@ class HOMOSPHERE : public HomogeneousConstants<FLOAT> {
             Interpolation::Polynomial1D<FLOAT> rettemp{0.0};
             return rettemp;
         } else {
-            return 1000.0 * vec_density[i];
+            return 1000.0 * vec_density[i] / this->DensityNorm();
         }
     };
 
