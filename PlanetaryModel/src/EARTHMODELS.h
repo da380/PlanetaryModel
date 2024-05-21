@@ -520,7 +520,7 @@ class HOMOBOUND0 : public HOMOSPHERE<FLOAT, int> {
     //     return RadialMap();
     // };
     FLOAT RadialMap(FLOAT r, FLOAT theta, FLOAT phi) const { return 0.0; };
-    FLOAT MaxRadius const { return this->OuterRadius(); };
+    FLOAT MaxRadius() const { return this->OuterRadius(); };
 
   private:
     std::vector<Interpolation::Polynomial1D<FLOAT>> vec_pert_density{
@@ -544,7 +544,7 @@ class HOMOBOUND1 : public HOMOSPHERE<FLOAT, int> {
     //     return RadialMap();
     // };
     FLOAT RadialMap(FLOAT r, FLOAT theta, FLOAT phi) const { return 0.01 * r; };
-    FLOAT MaxRadius const { return 1.01 * this->OuterRadius(); };
+    FLOAT MaxRadius() const { return 1.01 * this->OuterRadius(); };
 
   private:
     std::vector<Interpolation::Polynomial1D<FLOAT>> vec_pert_density{
@@ -568,7 +568,7 @@ class HOMOBOUND2 : public HOMOSPHERE<FLOAT, int> {
     //     return RadialMap();
     // };
     FLOAT RadialMap(FLOAT r, FLOAT theta, FLOAT phi) const { return 0.02 * r; };
-    FLOAT MaxRadius const { return 1.02 * this->OuterRadius(); };
+    FLOAT MaxRadius() const { return 1.02 * this->OuterRadius(); };
 
   private:
     std::vector<Interpolation::Polynomial1D<FLOAT>> vec_pert_density{
