@@ -587,7 +587,7 @@ class HOMOBOUND3 : public HOMOSPHERE<FLOAT, int> {
     using size_type = INTEGRAL;
 
     // Constructor
-    HOMOBOUND2(){};
+    HOMOBOUND3(){};
 
     // Density
     Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
