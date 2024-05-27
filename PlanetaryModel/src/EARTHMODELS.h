@@ -597,6 +597,33 @@ class HOMOBOUND3 : public HOMOSPHERE<FLOAT, int> {
     //     return RadialMap();
     // };
     FLOAT RadialMap(FLOAT r, FLOAT theta, FLOAT phi) const {
+        return 0.2 * this->OuterRadius() * (r / this->OuterRadius()) *
+               (1.0 - r / this->OuterRadius());
+    };
+    FLOAT MaxRadius() const { return 1.0 * this->OuterRadius(); };
+
+  private:
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_pert_density{
+        {0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+};
+
+template <typename FLOAT = double, typename INTEGRAL = int>
+class HOMOBOUND4 : public HOMOSPHERE<FLOAT, int> {
+
+  public:
+    using size_type = INTEGRAL;
+
+    // Constructor
+    HOMOBOUND4(){};
+
+    // Density
+    Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
+        return vec_pert_density[i];
+    };
+    // std::function<FLOAT(FLOAT, FLOAT, FLOAT)> RadialMap() const {
+    //     return RadialMap();
+    // };
+    FLOAT RadialMap(FLOAT r, FLOAT theta, FLOAT phi) const {
         return 0.8 * this->OuterRadius() * (r / this->OuterRadius()) *
                (1.0 - r / this->OuterRadius());
     };
