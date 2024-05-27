@@ -597,7 +597,8 @@ class HOMOBOUND3 : public HOMOSPHERE<FLOAT, int> {
     //     return RadialMap();
     // };
     FLOAT RadialMap(FLOAT r, FLOAT theta, FLOAT phi) const {
-        return 0.05 * r * (this->OuterRadius() - r);
+        return 0.2 * this->OuterRadius() * (r / this->OuterRadius()) *
+               (1.0 - r / this->OuterRadius());
     };
     FLOAT MaxRadius() const { return 1.0 * this->OuterRadius(); };
 
