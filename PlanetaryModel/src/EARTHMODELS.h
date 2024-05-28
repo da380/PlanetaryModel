@@ -634,6 +634,32 @@ class HOMOBOUND4 : public HOMOSPHERE<FLOAT, int> {
         {0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
 };
 
+template <typename FLOAT = double, typename INTEGRAL = int>
+class HOMOBOUND5 : public HOMOSPHERE<FLOAT, int> {
+
+  public:
+    using size_type = INTEGRAL;
+
+    // Constructor
+    HOMOBOUND5(){};
+
+    // Density
+    Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
+        return vec_pert_density[i];
+    };
+    // std::function<FLOAT(FLOAT, FLOAT, FLOAT)> RadialMap() const {
+    //     return RadialMap();
+    // };
+    FLOAT RadialMap(FLOAT r, FLOAT theta, FLOAT phi) const {
+        return r*r - r;
+    };
+    FLOAT MaxRadius() const { return this->OuterRadius() * this->OuterRadius(); };
+
+  private:
+    std::vector<Interpolation::Polynomial1D<FLOAT>> vec_pert_density{
+        {0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+};
+
 };   // namespace EarthModels
 
 #endif
