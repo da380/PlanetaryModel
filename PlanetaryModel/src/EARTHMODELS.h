@@ -679,7 +679,7 @@ class HOMOBOUND6 : public HOMOSPHERE<FLOAT, int> {
     //     return RadialMap();
     // };
     FLOAT RadialMap(FLOAT r, FLOAT theta, FLOAT phi) const {
-        return 0.01 * r * std::sin(theta);
+        return 0.01 * r * (1 - r / this->OuterRadius()) * std::sin(theta);
     };
     FLOAT MaxRadius() const { return this->OuterRadius() * 1.01; };
 
