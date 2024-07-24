@@ -12,7 +12,7 @@
 #include "Interpolation/All"
 
 namespace EarthModels {
-template <typename FLOAT> class EarthConstants {
+template <typename FLOAT = double> class EarthConstants {
   public:
     using value_type = FLOAT;
     FLOAT LengthNorm() const { return length_norm; };
@@ -308,7 +308,7 @@ class PERTPREM : public PREM<FLOAT, int> {
     using size_type = INTEGRAL;
 
     // Constructor
-    PERTPREM(){};
+    PERTPREM() {};
 
     // Density
     Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
@@ -515,7 +515,7 @@ class HOMOBOUND0 : public HOMOSPHERE<FLOAT, int> {
     using size_type = INTEGRAL;
 
     // Constructor
-    HOMOBOUND0(){};
+    HOMOBOUND0() {};
 
     // Density
     Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
@@ -539,7 +539,7 @@ class HOMOBOUND1 : public HOMOSPHERE<FLOAT, int> {
     using size_type = INTEGRAL;
 
     // Constructor
-    HOMOBOUND1(){};
+    HOMOBOUND1() {};
 
     // Density
     Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
@@ -563,7 +563,7 @@ class HOMOBOUND2 : public HOMOSPHERE<FLOAT, int> {
     using size_type = INTEGRAL;
 
     // Constructor
-    HOMOBOUND2(){};
+    HOMOBOUND2() {};
 
     // Density
     Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
@@ -587,7 +587,7 @@ class HOMOBOUND3 : public HOMOSPHERE<FLOAT, int> {
     using size_type = INTEGRAL;
 
     // Constructor
-    HOMOBOUND3(){};
+    HOMOBOUND3() {};
 
     // Density
     Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
@@ -614,7 +614,7 @@ class HOMOBOUND4 : public HOMOSPHERE<FLOAT, int> {
     using size_type = INTEGRAL;
 
     // Constructor
-    HOMOBOUND4(){};
+    HOMOBOUND4() {};
 
     // Density
     Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
@@ -641,7 +641,7 @@ class HOMOBOUND5 : public HOMOSPHERE<FLOAT, int> {
     using size_type = INTEGRAL;
 
     // Constructor
-    HOMOBOUND5(){};
+    HOMOBOUND5() {};
 
     // Density
     Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
@@ -669,7 +669,7 @@ class HOMOBOUND6 : public HOMOSPHERE<FLOAT, int> {
     using size_type = INTEGRAL;
 
     // Constructor
-    HOMOBOUND6(){};
+    HOMOBOUND6() {};
 
     // Density
     Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
@@ -695,7 +695,7 @@ class HOMOBOUND7 : public HOMOSPHERE<FLOAT, int> {
     using size_type = INTEGRAL;
 
     // Constructor
-    HOMOBOUND7(){};
+    HOMOBOUND7() {};
 
     // Density
     Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
@@ -721,7 +721,7 @@ class HOMOBOUND8 : public HOMOSPHERE<FLOAT, int> {
     using size_type = INTEGRAL;
 
     // Constructor
-    HOMOBOUND8(){};
+    HOMOBOUND8() {};
 
     // Density
     Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
@@ -747,7 +747,7 @@ class HOMOBOUND9 : public HOMOSPHERE<FLOAT, int> {
     using size_type = INTEGRAL;
 
     // Constructor
-    HOMOBOUND9(){};
+    HOMOBOUND9() {};
 
     // Density
     Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
