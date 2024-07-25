@@ -171,7 +171,7 @@ class PREM : public EarthConstants<FLOAT> {
                                  6368000.0, 6371000.0};
 
     std::vector<Interpolation::Polynomial1D<FLOAT>> vec_density{
-        {13.0855, 0, -8.8381},
+        {13.0885, 0, -8.8381},
         {12.5815, -1.2638, -3.6426, -5.5281},
         {7.9565, -6.4761, 5.5283, -3.0807},
         {7.9565, -6.4761, 5.5283, -3.0807},
@@ -774,7 +774,7 @@ class HOMOBOUND10 : public HOMOSPHERE<FLOAT, int> {
     using size_type = INTEGRAL;
 
     // Constructor
-    HOMOBOUND10(){};
+    HOMOBOUND10() {};
 
     // Density
     Interpolation::Polynomial1D<FLOAT> DensityPerturbation(INTEGRAL i) {
