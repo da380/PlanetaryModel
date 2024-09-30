@@ -2,6 +2,7 @@
 #define PLANETARY_MODEL_ALL_MODULE_H
 
 #include "src/Concepts.h"
+#include "src/Concepts2.h"
 #include "src/EARTHMODELS.h"
 
 #endif
