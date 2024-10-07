@@ -27,6 +27,22 @@ concept TomographyModel = requires(Model model, double d, double lo, double la,
     { model.GetValues() } -> std::convertible_to<std::vector<double>>;
 };
 
+// zero change tomography model
+class TomographyZeroModel {
+  public:
+    double GetValueAt(double d, double lo, double la, bool outofBound = false) {
+        return 0.0;
+    };
+    auto GetDepths() { return vec_depths; };
+    auto GetLatitudes() { return vec_latitudes; };
+    auto GetLongitudes() { return vec_longitudes; };
+    auto GetValues() { return vec_values; };
+
+  private:
+    std::vector<double> vec_depths{0, 6371.0}, vec_latitudes{-90.0, 90.0},
+        vec_longitudes{0.0, 360.0}, vec_values{0};
+};
+
 }   // namespace PlanetaryModel
 
 #endif   // PLANETARY_MODEL_CONCEPTS_GUARD_H
