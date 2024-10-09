@@ -30,6 +30,8 @@ concept TomographyModel = requires(Model model, double d, double lo, double la,
 // zero change tomography model
 class TomographyZeroModel {
   public:
+    TomographyZeroModel() {};
+
     double GetValueAt(double d, double lo, double la, bool outofBound = false) {
         return 0.0;
     };
