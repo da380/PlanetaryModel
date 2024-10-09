@@ -33,13 +33,13 @@ class TomographyZeroModel {
     TomographyZeroModel() {};
 
     const double GetValueAt(double d, double lo, double la,
-                            bool outofBound = false) {
+                            bool outofBound = false) const {
         return 0.0;
     };
-    const auto GetDepths() { return vec_depths; };
-    const auto GetLatitudes() { return vec_latitudes; };
-    const auto GetLongitudes() { return vec_longitudes; };
-    const auto GetValues() { return vec_values; };
+    const auto GetDepths() const { return vec_depths; };
+    const auto GetLatitudes() const { return vec_latitudes; };
+    const auto GetLongitudes() const { return vec_longitudes; };
+    const auto GetValues() const { return vec_values; };
 
   private:
     const std::vector<double> vec_depths{0, 6371.0}, vec_latitudes{-90.0, 90.0},
