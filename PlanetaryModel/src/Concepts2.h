@@ -7,6 +7,53 @@
 
 namespace PlanetaryModel {
 
+// simplified concepts
+template <typename T>
+concept HasBasicNormalisationInformation = requires(T t) {
+    // Member functions for returning base normalisations.
+    { t.LengthNorm() } -> std::convertible_to<double>;
+    { t.MassNorm() } -> std::convertible_to<double>;
+    { t.TimeNorm() } -> std::convertible_to<double>;
+};
+
+// Concept for a spherical geometry model.
+template <typename Model, typename INT, typename FLOAT>
+concept BasicSphericalGeometryModel = requires(Model model, INT i, FLOAT r) {
+    // Member type "size_type" needed that must be integral.
+    // typename Model::size_type;
+    requires std::integral<INT>;
+
+    // Member type "value_type" needed that must be floating point.
+    // typename Model::value_type;
+    requires std::floating_point<FLOAT>;
+
+    // Provides normalisations.
+    requires HasBasicNormalisationInformation<Model>;
+
+    // Member function returning the number of layers in the model.
+    { model.NumberOfLayers() } -> std::convertible_to<INT>;
+
+    // Member functions returning the lower and upper radius of the ith
+    // layer.
+    { model.LowerRadius(i) } -> std::convertible_to<FLOAT>;
+    { model.UpperRadius(i) } -> std::convertible_to<FLOAT>;
+
+    // Member function returning the outer radius.
+    { model.OuterRadius() } -> std::convertible_to<FLOAT>;
+};
+
+// Concept for a spherical density model.
+template <typename Model, typename INT, typename FLOAT>
+concept BasicSimpleSphericalDensityModel =
+    requires(Model model, INT i, FLOAT r) {
+        // Needs all properties of a spherical geometry model.
+        requires BasicSphericalGeometryModel<Model, INT, FLOAT>;
+
+        // Member function to return density in the ith layer.
+        { model.Density(i) } -> std::regular_invocable<FLOAT>;
+        { model.Density(i)(r) } -> std::convertible_to<FLOAT>;
+    };
+
 // Concept for a spherical geometry model.
 template <typename Model>
 concept TomographyModel = requires(Model model, double d, double lo, double la,
