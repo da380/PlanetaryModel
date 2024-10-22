@@ -61,7 +61,7 @@ concept BasicAsphericalDensityModel =
         requires BasicSphericalDensityModel<Model, INT, FLOAT>;
 
         // Member function to return density in the ith layer.
-        { model.Mapping(i) } -> std::regular_invocable<FLOAT>;
+        { model.Mapping(i) } -> std::regular_invocable<FLOAT,FLOAT,FLOAT>;
         { model.Mapping(i)(r, theta, phi) } -> std::convertible_to<FLOAT>;
     };
 
