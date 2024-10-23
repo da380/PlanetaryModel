@@ -61,10 +61,18 @@ concept BasicAsphericalDensityModel =
         requires BasicSphericalDensityModel<Model, INT, FLOAT>;
 
         // Member function to return density in the ith layer.
-        { model.Mapping(i) } -> std::regular_invocable<FLOAT,FLOAT,FLOAT>;
+        { model.Mapping(i) } -> std::regular_invocable<FLOAT, FLOAT, FLOAT>;
         { model.Mapping(i)(r, theta, phi) } -> std::convertible_to<FLOAT>;
     };
 
+// concept for a mapping class
+template <typename Model>
+concept MappingClass =
+    requires(Model model, int i, double r, double theta, double phi) {
+        // Member function to return density in the ith layer.
+        { model.Mapping(i) } -> std::regular_invocable<double, double, double>;
+        { model.Mapping(i)(r, theta, phi) } -> std::convertible_to<double>;
+    };
 // Concept for a spherical geometry model.
 template <typename Model>
 concept TomographyModel = requires(Model model, double d, double lo, double la,
