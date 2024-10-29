@@ -73,6 +73,7 @@ concept MappingClass =
         { model.Mapping(i) } -> std::regular_invocable<double, double, double>;
         { model.Mapping(i)(r, theta, phi) } -> std::convertible_to<double>;
     };
+
 // Concept for a spherical geometry model.
 template <typename Model>
 concept TomographyModel = requires(Model model, double d, double lo, double la,
