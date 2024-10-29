@@ -112,12 +112,12 @@ class TomographyZeroModel {
         vec_longitudes{0.0, 360.0}, vec_values{0};
 };
 
-//zero mapping
-class ZeroMapping {
-    pulic: 
-    ZeroMapping(){};
-    
-}
+// zero mapping
+//  class ZeroMapping {
+//      pulic:
+//      ZeroMapping(){};
+
+// }
 
 }   // namespace PlanetaryModel
 
