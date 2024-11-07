@@ -67,11 +67,15 @@ concept BasicAsphericalDensityModel =
 
 // concept for a mapping class
 template <typename Model>
-concept MappingClass =
+concept RadialMappingClass =
     requires(Model model, int i, double r, double theta, double phi) {
         // Member function to return density in the ith layer.
-        { model.Mapping(i) } -> std::regular_invocable<double, double, double>;
-        { model.Mapping(i)(r, theta, phi) } -> std::convertible_to<double>;
+        {
+            model.RadialMapping(i)
+        } -> std::regular_invocable<double, double, double>;
+        {
+            model.RadialMapping(i)(r, theta, phi)
+        } -> std::convertible_to<double>;
     };
 
 // Concept for a spherical geometry model.
