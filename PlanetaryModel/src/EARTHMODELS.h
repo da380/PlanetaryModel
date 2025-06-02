@@ -97,22 +97,22 @@ class PREM : public EarthConstants<FLOAT> {
     // Velocities
 
     Interpolation::Polynomial1D<FLOAT> VP(INTEGRAL i) const {
-        return vec_p_velocity[i];
+        return vec_p_velocity[i] * 1000.0 / this->VelocityNorm();
     };
     Interpolation::Polynomial1D<FLOAT> VPV(INTEGRAL i) const {
-        return vec_pv_velocity[i];
+        return vec_pv_velocity[i] * 1000.0 / this->VelocityNorm();
     };
     Interpolation::Polynomial1D<FLOAT> VPH(INTEGRAL i) const {
-        return vec_ph_velocity[i];
+        return vec_ph_velocity[i] * 1000.0 / this->VelocityNorm();
     };
     Interpolation::Polynomial1D<FLOAT> VS(INTEGRAL i) const {
-        return vec_s_velocity[i];
+        return vec_s_velocity[i] * 1000.0 / this->VelocityNorm();
     };
     Interpolation::Polynomial1D<FLOAT> VSV(INTEGRAL i) const {
-        return vec_sv_velocity[i];
+        return vec_sv_velocity[i] * 1000.0 / this->VelocityNorm();
     };
     Interpolation::Polynomial1D<FLOAT> VSH(INTEGRAL i) const {
-        return vec_sh_velocity[i];
+        return vec_sh_velocity[i] * 1000.0 / this->VelocityNorm();
     };
 
     // Returning eta, A, C, N, L, kappa, mu
