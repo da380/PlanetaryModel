@@ -125,10 +125,10 @@ class PREM : public EarthConstants<FLOAT> {
         return aret;
     };
     auto C(INTEGRAL i) const {
-        // auto aret = [i, this](FLOAT x) {
-        //     return Density(i)(x) * VPV(i)(x) * VPV(i)(x);
-        // };
-        return vec_A[i];
+        auto aret = [i, this](FLOAT x) {
+            return Density(i)(x) * VPV(i)(x) * VPV(i)(x);
+        };
+        return aret;
     };
     auto N(INTEGRAL i) const {
         auto aret = [i, this](FLOAT x) {
