@@ -16,15 +16,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# add in Eigen3
-include(FetchContent)
-FetchContent_Declare(
-  Eigen3
-  GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-  GIT_TAG master
-)
-FetchContent_MakeAvailable(Eigen3)
-
 include(FetchContent)
 FetchContent_Declare(
   Interpolation
@@ -34,33 +25,9 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Interpolation)
 
 
-
-include(FetchContent)
-FetchContent_Declare(
-  GaussQuad
-  GIT_REPOSITORY https://github.com/da380/GaussQuad
-  GIT_TAG develop
-)
-FetchContent_MakeAvailable(GaussQuad)
-
-# include(FetchContent)
-# FetchContent_Declare(
-#   Boost
-#   GIT_REPOSITORY https://github.com/boostorg/boost
-#   GIT_TAG develop
-# )
-# FetchContent_MakeAvailable(Boost)
-# find_package( Boost REQUIRED COMPONENTS program_options regex )
-# include_directories( ${Boost_INCLUDE_DIRS} )
-
 # Set up the library
 add_library (PlanetaryModel INTERFACE)
-target_link_libraries(PlanetaryModel INTERFACE Eigen3::Eigen)
 target_link_libraries(PlanetaryModel INTERFACE Interpolation)
-target_link_libraries(PlanetaryModel INTERFACE GaussQuad)
-# target_link_libraries(PlanetaryModel INTERFACE ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_REGEX_LIBRARY})
-
-# target_link_libraries(PlanetaryModel INTERFACE Boost)
 target_include_directories (PlanetaryModel INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>

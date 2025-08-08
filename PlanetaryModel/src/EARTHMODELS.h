@@ -1,16 +1,18 @@
 #ifndef EARTHMODELS_GUARD_H
 #define EARTHMODELS_GUARD_H
 
-#include <PlanetaryModel/All>
-#include <cmath>
-#include <concepts>
+// #include <PlanetaryModel/All>
+// #include <cmath>
+// #include <concepts>
 #include <fstream>
-#include <functional>
-#include <iostream>
-#include <ranges>
-#include <vector>
+// #include <functional>
+// #include <iostream>
+// #include <ranges>
+// #include <vector>
 
-#include "Interpolation/All"
+// #include "Interpolation/All"
+#include <Interpolation/CubicSpline>
+#include <Interpolation/Polynomial>
 
 namespace EarthModels {
 template <typename FLOAT = double> class EarthConstants {

@@ -2,7 +2,7 @@
 #define TOMOGRAPHY_MODEL_CONCEPTS_GUARD_H
 
 #include <concepts>
-#include <ranges>
+// #include <ranges>
 #include <vector>
 
 namespace PlanetaryModel {

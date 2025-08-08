@@ -2,7 +2,7 @@
 #define PLANETARY_MODEL_CONCEPTS_GUARD_H
 
 #include <concepts>
-#include <ranges>
+// #include <ranges>
 
 namespace PlanetaryModel {
 
