@@ -1094,13 +1094,21 @@ ModelInput<FLOAT, INTEGRAL>::ModelInput(
     : length_norm(ModelConstants.LengthNorm()),
       mass_norm(ModelConstants.MassNorm()),
       time_norm(ModelConstants.TimeNorm()),
-      density_norm(ModelConstants.DensityNorm()),
-      velocity_norm(ModelConstants.VelocityNorm()),
-      acceleration_norm(ModelConstants.AccelerationNorm()),
-      force_norm(ModelConstants.ForceNorm()),
-      stress_norm(ModelConstants.StressNorm()),
-      inertia_norm(ModelConstants.InertiaNorm()),
-      gravitational_constant(ModelConstants.GravitationalConstant()) {
+      density_norm(ModelConstants.MassNorm() /
+                   (std::pow(ModelConstants.LengthNorm(), 3.0))),
+      velocity_norm(ModelConstants.LengthNorm() / ModelConstants.TimeNorm()),
+      acceleration_norm(ModelConstants.LengthNorm() /
+                        std::pow(ModelConstants.TimeNorm(), 2.0)),
+      force_norm(ModelConstants.MassNorm() * ModelConstants.LengthNorm() /
+                 std::pow(ModelConstants.TimeNorm(), 2.0)),
+      stress_norm(ModelConstants.MassNorm() /
+                  (ModelConstants.LengthNorm() *
+                   std::pow(ModelConstants.TimeNorm(), 2.0))),
+      inertia_norm(ModelConstants.MassNorm() *
+                   std::pow(ModelConstants.LengthNorm(), 2.0)),
+      gravitational_constant(std::pow(ModelConstants.LengthNorm(), 3.0) /
+                             (ModelConstants.MassNorm() *
+                              std::pow(ModelConstants.TimeNorm(), 2.0))) {
 
     // std::cout << this->density_norm << "\n";
     // opening file
