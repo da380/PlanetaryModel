@@ -1344,6 +1344,13 @@ ModelInput<FLOAT, INTEGRAL>::ModelInput(
         modelfile >> numnodes >> nic >> noc;
         modelfile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
+        if (ifanis) {
+            std::cout << "Anisotropic model loaded from file: " << pathtofile
+                      << "\n";
+        } else {
+            std::cout << "Isotropic model loaded from file: " << pathtofile
+                      << "\n";
+        }
         // loop through the deck
         int laynum = 0;
         int idxouter = 0;
@@ -1357,10 +1364,16 @@ ModelInput<FLOAT, INTEGRAL>::ModelInput(
             // while (samelayer) {
             // double radius;
             double radius, rho, vpv, vsv, qkappa, qshear, vph, vsh, eta;
-            modelfile >> radius >> rho >> vpv >> vsv >> qkappa >> qshear;
-            vph = vpv;
-            vsh = vsv;
-            eta = 1.0;
+            if (ifanis) {
+                modelfile >> radius >> rho >> vpv >> vsv >> qkappa >> qshear >>
+                    vph >> vsh >> eta;
+            } else {
+                modelfile >> radius >> rho >> vpv >> vsv >> qkappa >> qshear;
+                vph = vpv;
+                vsh = vsv;
+                eta = 1.0;
+            }
+
             if (idxinner > 0 && (radius / this->length_norm ==
                                  layered_radii[laynum][idxinner - 1])) {
                 // move to next layer
