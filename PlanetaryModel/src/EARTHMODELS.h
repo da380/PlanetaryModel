@@ -932,24 +932,17 @@ template <typename FLOAT = double, typename INTEGRAL = int> class ModelInput {
     ////////////////// !!!!!!!!!!!!!!!!!!!!!!!!!!! ////////////////
     ///////////////////////////////////////////////////////////////
     InterpA VS(INTEGRAL i) const {
-        if (i < 0) {
-            throw std::invalid_argument("Negative layer index");
-        } else if (i > _numlayers - 1) {
-            assert("Outside model");
-            throw std::invalid_argument(
-                "Layer index greater than number of layers");
+        auto aret = [i, this](FLOAT x) {
+            return std::sqrt(Mu(i)(x) / Density(i)(x));
         };
-        return func_vsv[i];
+        return aret;
     };
     InterpA VP(INTEGRAL i) const {
-        if (i < 0) {
-            throw std::invalid_argument("Negative layer index");
-        } else if (i > _numlayers - 1) {
-            assert("Outside model");
-            throw std::invalid_argument(
-                "Layer index greater than number of layers");
+        auto aret = [i, this](FLOAT x) {
+            return std::sqrt((Kappa(i)(x) + 4.0 / 3.0 * Mu(i)(x)) /
+                             Density(i)(x));
         };
-        return func_vpv[i];
+        return aret;
     };
     ///////////////////////////////////////////////////////////////
     ////////////////// !!!!!!!!!!!!!!!!!!!!!!!!!!! ////////////////
