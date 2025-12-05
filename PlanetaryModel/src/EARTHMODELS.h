@@ -931,13 +931,13 @@ template <typename FLOAT = double, typename INTEGRAL = int> class ModelInput {
     ///////////////////////////////////////////////////////////////
     ////////////////// !!!!!!!!!!!!!!!!!!!!!!!!!!! ////////////////
     ///////////////////////////////////////////////////////////////
-    InterpA VS(INTEGRAL i) const {
+    auto VS(INTEGRAL i) const {
         auto aret = [i, this](FLOAT x) {
             return std::sqrt(Mu(i)(x) / Density(i)(x));
         };
         return aret;
     };
-    InterpA VP(INTEGRAL i) const {
+    auto VP(INTEGRAL i) const {
         auto aret = [i, this](FLOAT x) {
             return std::sqrt((Kappa(i)(x) + 4.0 / 3.0 * Mu(i)(x)) /
                              Density(i)(x));
