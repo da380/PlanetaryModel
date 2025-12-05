@@ -928,6 +928,26 @@ template <typename FLOAT = double, typename INTEGRAL = int> class ModelInput {
         return func_vsh[i];
     };
 
+    auto QKappa(INTEGRAL i) const {
+        if (i < 0) {
+            throw std::invalid_argument("Negative layer index");
+        } else if (i > _numlayers - 1) {
+            assert("Outside model");
+            throw std::invalid_argument(
+                "Layer index greater than number of layers");
+        };
+        return func_qkappa[i];
+    };
+    auto QMu(INTEGRAL i) const {
+        if (i < 0) {
+            throw std::invalid_argument("Negative layer index");
+        } else if (i > _numlayers - 1) {
+            assert("Outside model");
+            throw std::invalid_argument(
+                "Layer index greater than number of layers");
+        };
+        return func_qshear[i];
+    };
     ///////////////////////////////////////////////////////////////
     ////////////////// !!!!!!!!!!!!!!!!!!!!!!!!!!! ////////////////
     ///////////////////////////////////////////////////////////////
