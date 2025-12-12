@@ -829,6 +829,7 @@ template <typename FLOAT = double, typename INTEGRAL = int> class ModelInput {
     FLOAT ForceNorm() const { return force_norm; };
     FLOAT StressNorm() const { return stress_norm; };
     FLOAT GravitationalConstant() const { return gravitational_constant; };
+    auto TREF() const { return tref; };
 
     // Geometry of model
     int NumberOfLayers() const { return _numlayers; };
@@ -1138,7 +1139,7 @@ ModelInput<FLOAT, INTEGRAL>::ModelInput(
         // extract information from second line and move to next line
         modelfile >> ifanis >> tref >> ifdeck;
         modelfile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
+        tref *= 1.0 / this->time_norm;
         // extract information from third line and move to next line
         modelfile >> numnodes >> nic >> noc;
         modelfile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -1352,7 +1353,7 @@ ModelInput<FLOAT, INTEGRAL>::ModelInput(
         // extract information from second line and move to next line
         modelfile >> ifanis >> tref >> ifdeck;
         modelfile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
+        tref *= 1.0 / this->time_norm;
         // extract information from third line and move to next line
         modelfile >> numnodes >> nic >> noc;
         modelfile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
