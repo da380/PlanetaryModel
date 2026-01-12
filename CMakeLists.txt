@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.5)
 
+# set(CMAKE_C_COMPILER "gcc")
+# set(CMAKE_CXX_COMPILER "g++")
 project(PlanetaryModel)
 
 
@@ -14,18 +16,18 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# add in Eigen3
 include(FetchContent)
 FetchContent_Declare(
-  Eigen3
-  GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-  GIT_TAG master
+  Interpolation
+  GIT_REPOSITORY https://github.com/da380/Interpolation
+  GIT_TAG develop
 )
-FetchContent_MakeAvailable(Eigen3)
+FetchContent_MakeAvailable(Interpolation)
+
 
 # Set up the library
 add_library (PlanetaryModel INTERFACE)
-target_link_libraries(PlanetaryModel INTERFACE Eigen3::Eigen)
+target_link_libraries(PlanetaryModel INTERFACE Interpolation)
 target_include_directories (PlanetaryModel INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>
